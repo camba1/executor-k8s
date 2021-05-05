@@ -38,6 +38,9 @@ const PR_JOBNAME_REGEX_PATTERN = /^PR-([0-9]+)(?::[\w-]+)?$/gi;
 const TERMINATION_GRACE_PERIOD_SECONDS = 'terminationGracePeriodSeconds';
 const POD_STATUSQUERY_RETRYDELAY_MS = 500;
 
+const DEFAULT_DOCKER_IMAGE_VERSION = 'docker:18.05-dind';
+const DOCKER_IMAGE_VERSION_KEY = 'dockerDindVersion';
+
 /**
  * Parses annotations config and update intended annotations
  * @param {Object} podConfig      k8s pod config
@@ -450,6 +453,9 @@ class K8sExecutor extends Executor {
         const dockerMemoryConfig = annotations[DOCKER_MEMORY_RESOURCE];
         const DOCKER_RAM = dockerMemoryConfig in memValues ? memValues[dockerMemoryConfig] : memValues.LOW;
 
+        const dockerVersionConfig = annotations[DOCKER_IMAGE_VERSION_KEY];
+        const DOCKER_VERSION = dockerVersionConfig || DEFAULT_DOCKER_IMAGE_VERSION;
+
         const random = randomstring.generate({
             length: 5,
             charset: 'alphanumeric',
@@ -520,7 +526,8 @@ class K8sExecutor extends Executor {
             },
             dns_policy: this.dnsPolicy,
             image_pull_policy: this.imagePullPolicy,
-            volume_mounts: this.volumeMounts
+            volume_mounts: this.volumeMounts,
+            image_version: DOCKER_VERSION
         });
         const podConfig = yaml.safeLoad(podTemplate);
         const nodeSelectors = {};

@@ -628,6 +628,15 @@ describe('index', function() {
             });
         });
 
+        it('sets the docker image version', () => {
+            fakeStartConfig.annotations['screwdriver.cd/dockerDindVersion'] = '20.10.6-dind';
+
+            return executor.start(fakeStartConfig).then(() => {
+                assert.calledWith(requestRetryMock.firstCall, postConfig);
+                assert.calledWith(requestRetryMock.secondCall, sinon.match(getConfig));
+            });
+        });
+
         it('sets annotations with appropriate annotations config', () => {
             const options = _.assign({}, executorOptions, {
                 kubernetes: {

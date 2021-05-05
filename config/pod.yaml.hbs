@@ -94,7 +94,7 @@ spec:
     {{/each}}
   {{#if docker.enabled}}
   - name: dind
-    image: docker:18.05-dind
+    image: {docker.image_version}
     resources:
       limits:
         cpu: {{docker.cpu }}m
