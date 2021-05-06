@@ -522,12 +522,12 @@ class K8sExecutor extends Executor {
             docker: {
                 enabled: DOCKER_ENABLED,
                 cpu: DOCKER_CPU,
-                memory: DOCKER_RAM
+                memory: DOCKER_RAM,
+                image_version: DOCKER_VERSION
             },
             dns_policy: this.dnsPolicy,
             image_pull_policy: this.imagePullPolicy,
-            volume_mounts: this.volumeMounts,
-            image_version: DOCKER_VERSION
+            volume_mounts: this.volumeMounts
         });
         const podConfig = yaml.safeLoad(podTemplate);
         const nodeSelectors = {};
